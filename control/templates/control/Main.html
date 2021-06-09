@@ -1,0 +1,171 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Result Processing System</title>
+    <link rel="stylesheet" href="{% static 'control/style.css' %}"/>
+    <link rel="icon" href="{% static 'control/rps.png' %}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <h2>
+          <span><img src="{% static 'control/rps.png' %}" width="300" height="200" /></span>
+        </h2>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="#" class="active"
+              ><span class="las la-igloo"></span>
+              <span>Add Student Details</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'searchstudent' %}"
+              ><span class="las la-users"></span> <span>Search Student</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'result' %}"
+              ><span class="las la-place-of-worship"></span>
+              <span>Search Result</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'updateresult' %}"
+              ><span class="las la-receipt"></span>
+              <span>Update Student Marks</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    
+
+    <div class="main-content">
+      {% if message %}
+      <h2 style="text-align: center;color: rgb(47, 26, 87);margin-bottom: 20px;margin-left: 100px;">{{message}}</h2>
+      {% endif %}
+      <form id="studentForm" method="POST" action="{% url 'student' %}">
+        {% csrf_token %}
+      <div class="inside-main" style="margin-left: 150px">
+        <span>
+          <label for="prog_id" style="font-weight: 600">Program ID :</label>
+
+          <select style="margin-left: 25px; width:130px" name = "prog_id" id="prog_id">
+            {% for program in scheme %}
+             {% for data in program %}
+               <option  name="{{data}}" value="{{data}}">{{data}}</option>
+             {% endfor %}
+            {% endfor %}
+         </select>
+
+         
+        </span>
+
+        <span class="Enroll_NUM">
+          <label for="enroll_no" style="font-weight: 600"
+            >Enrollment Num :
+          </label>
+          <input type="text" id="enroll_no" name="enroll_no" />
+        </span>
+      </div>
+
+      <div class="inside-main">
+        <span class="Name">
+          <label for="name" style="font-weight: 600">Name : </label>
+          <input style="margin-left: 57px" type="text" id="name" name="name" />
+        </span>
+
+        <span class="Semester">
+          <label for="semester" style="font-weight: 600">Semester : </label>
+          <input type="number" id="sem" name="sem" style="margin-left: 45px" />
+        </span>
+      </div>
+
+      <div class="inside-main">
+        <span class="Mother_Name">
+          <label for="mother_name" style="font-weight: 600"
+            >Mother's Name :
+          </label>
+          <input type="text" id="mother_name" name="mother_name" />
+        </span>
+
+        <span class="Father_Name">
+          <label for="father_name" style="font-weight: 600"
+            >Father's Name :
+          </label>
+          <input type="text" id="father_name" name="father_name" style="margin-left: 15px" />
+        </span>
+      </div>
+
+      <div class="inside-main">
+        <span class="Department_Code">
+          <label for="department_code" style="font-weight: 600"
+            >Department :
+          </label>
+          <select style="margin-left: 20px; width:130px" name = "dept_id">
+            {% for department in departments %}
+             {% for data in department %}
+               <option name="{{data}}" value="{{data}}">{{data}}</option>
+              {% endfor %}
+            {% endfor %}
+         </select>
+          <!-- <input style="margin-left: 20px" type="text" id="department_code" /> -->
+        </span>
+
+        <span class="Admission_Year">
+          <label for="adm_year" style="font-weight: 600">Admission Year :
+          </label>
+          <input type="number" id="adm_year" name="adm_year" style="margin-left: 10px" />
+        </span>
+
+
+        
+      </div>
+
+      <!-- <div class="inside-main" id="Is_Active">
+        <label for="is_active" style="font-weight: 600">Active : </label>
+        <input type="text" id="is_active" />
+      </div> -->
+
+      <div style="margin-top: 30px; margin-left: 80px;text-align: center;">
+        <span id="button">
+          <input
+            type="submit"
+            value="ADD"
+            style="width: 100px; height: 30px; font-weight: 700"
+          />
+          
+        <!-- </span>
+        <span id="button">
+          <input
+            type="submit"
+            value="UPDATE"
+            style="width: 100px; height: 30px; font-weight: 700"
+          />
+        </span>
+        <span id="button">
+          <input
+            type="submit"
+            value="DELETE"
+            style="width: 100px; height: 30px; font-weight: 700"
+          />
+        </span>
+        <span id="button">
+          <input
+            type="submit"
+            value="SHOW"
+            style="width: 100px; height: 30px; font-weight: 700"
+          />
+        </span> -->
+      </div>
+    </form>
+    </div>
+
+    
+  </body>
+</html>

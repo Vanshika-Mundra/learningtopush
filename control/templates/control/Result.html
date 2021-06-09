@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Result Processing System</title>
+    <link rel="stylesheet" href="{% static 'control/style.css' %}"/>
+    <link rel="icon" href="{% static 'control/rps.png' %}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <h2>
+          <span><img src="{% static 'control/rps.png' %}" width="300" height="200" /></span>
+        </h2>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+          <a href="{% url 'index' %}"
+            ><span class="las la-igloo"></span>
+            <span>Add Student Details</span></a
+          >
+        </li>
+        <li>
+          <a href="{% url 'searchstudent' %}"
+            ><span class="las la-users"></span> <span>Search Student</span></a
+          >
+        </li>
+        <li>
+          <a href="#" class="active"
+            ><span class="las la-place-of-worship"></span>
+            <span>Search Result</span></a
+          >
+        </li>
+        <li>
+          <a href="{% url 'updateresult' %}"
+            ><span class="las la-receipt"></span>
+            <span>Update Student Marks</span></a
+          >
+        </li>
+        </ul>
+      </div>
+    </div>
+
+
+    {% if searching %}
+
+  <form method="POST" action="{% url 'searchresult' %}"> 
+    {% csrf_token %}
+    <div class="main-content" style="margin-bottom: 40px;">
+
+      <div style="margin-top: 50px; margin-left: 200px">
+        <label for="enroll_num" style="font-weight: 600">Enrollment Num :</label>
+        <input type="text" id="enroll_no" name="enroll_num" value="{{enrolldef}}"/>
+      </div>
+
+      <div style="margin-top: 50px; margin-left: 200px;">
+        <label for="sem" style="font-weight: 600">Semester : </label>
+        <input  type="number" id="semester" name="sem" style="margin-left: 40px; width:125px" min="1" max="8" value="{{semdef}}"/>
+      </div>
+
+      <div id="result_update_button">
+        <input type="submit" value="Search" style="padding: 5px;"/>
+      </div>
+    </form> 
+    <h2 style="color: red;text-align: center;margin-left: 250px;margin-top: 100px;">{{message}}</h2>
+
+  {% else %}
+
+
+
+    <div style="margin-left: 345px; margin-top: 50px">
+      <div style="display: flex; align-items: center">
+        <img
+          src="{% static 'control/ctae logo.png' %}"
+          alt="ctae logo"
+          style="width: 100px; height: 100px; margin-left: 70px;margin-top: 20px;"
+        />
+        <span
+          style="
+            margin-left: 10px;
+            font-size: xx-large;
+            font-weight: 700;
+            align-items: center;
+          "
+        >
+          COLLEGE OF TECHNOLOGY AND ENGINEERING UDAIPUR
+        </span>
+      </div>
+
+      <h3 style="margin-left: 290px;margin-bottom: 30px;">
+        BACHELOR OF TECHNOLOGY ({{department.0}})
+      </h3>
+      <div class="student_info">
+        <span><strong>Roll No</strong> : {{rollnum.0}}</span>
+        <span style="margin-left: 200px"><strong>Enrollment No</strong> : {{enroll_num}}</span>
+      </div>
+      <div class="student_info">
+        <span><strong>Name</strong> :{{student.0.0}}</span>
+        <span style="margin-left: 193px"><strong>Class</strong> :{{year}}</span>
+      </div>
+      <div class="student_info">
+        <span><strong>Father's Name</strong> : {{student.0.1}}</span>
+        <span style="margin-left: 100px"> <strong>Semester</strong>: {{sem}}</span>
+      </div>
+      <div class="student_info">
+        <span><strong>Mother's Name</strong>: {{student.0.2}}</span>
+        <span style="margin-left: 90px"><strong>Session</strong> : 2018-2019</span>
+      </div>
+
+      <table
+      border="1"
+        width="85%"
+        height="360"
+        style="margin-left: 100px; margin-top: 10px;border-collapse:collapse ;"
+      >
+        <tr>
+          <th>Course No.</th>
+          <th>Course Title</th>
+          <th colspan="2">Credit Hours</th>
+          <th colspan="4">Marks Obtained</th>
+          <th>Grade Points</th>
+          <th>Credit Points</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <th>TH</th>
+          <th>PR</th>
+          <th style="padding: 8px;">TH</th>
+          <th style="padding: 8px;">PR</th>
+          <th style="padding: 8px;">MT</th>
+          <th style="padding: 8px;">TOTAL</th>
+          <td></td>
+          <td></td>
+        </tr>
+        {% for course in courses %}
+         <tr>
+           <td>{{course.0}}</td>
+           <td>{{course.1}}</td>
+           <td>{{course.2}}</td>
+           <td>{{course.3}}</td>
+           {% if course.2 %}
+           <td>{{course.4}}</td>
+           {% else %}
+           <td>--</td>
+           {% endif %}
+           {% if course.3 %}
+            <td>{{course.5}}</td>
+           {% else %}
+            <td>--</td>
+           {% endif %}
+           <td>{{course.6}}</td>
+           <td>{{course.7}}</td>
+           <td>{{course.9}}</td>
+           <td>{{course.8}}</td>
+         </tr>
+        {% endfor %}
+        <!-- 
+        <tr>
+          <td>BS-222</td>
+          <td>DISCRETE MATHEMATICAL</td>
+          <td>3</td>
+          <td>0</td>
+          <td>80</td>
+          <td>--</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>30.0</td>
+        </tr>
+        <tr>
+          <td>CS-221</td>
+          <td>COPMUTER ORGANIZATION</td>
+          <td>3</td>
+          <td>0</td>
+          <td>80</td>
+          <td>--</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>30.0</td>
+        </tr>
+        <tr>
+          <td>CS-222</td>
+          <td>DATA STRUCTURE</td>
+          <td>3</td>
+          <td>1</td>
+          <td>50</td>
+          <td>30</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>40.0</td>
+        </tr>
+        <tr>
+          <td>CS-224</td>
+          <td>MICROPROSSORS</td>
+          <td>3</td>
+          <td>1</td>
+          <td>50</td>
+          <td>30</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>40.0</td>
+        </tr>
+        <tr>
+          <td>CS-225</td>
+          <td>SYSTEM SOFTWARE</td>
+          <td>3</td>
+          <td>1</td>
+          <td>50</td>
+          <td>30</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>40.0</td>
+        </tr>
+        <tr>
+          <td>EC-228</td>
+          <td>COMMUNICATION SYSTEM</td>
+          <td>3</td>
+          <td>0</td>
+          <td>80</td>
+          <td>--</td>
+          <td>20</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>30.0</td>
+        </tr>
+        <tr>
+          <td>NSS</td>
+          <td>NATIONAL SERVICE SCHEME</td>
+          <td>0</td>
+          <td>1</td>
+          <td>--</td>
+          <td>100</td>
+          <td>--</td>
+          <td>100</td>
+          <td>10.0</td>
+          <td>10.0</td>
+        </tr> -->
+      </table>
+
+      <div style="
+          width: 100%;
+          margin-top: 20px;
+          padding-left: 300px;
+          font-weight: 700;
+          margin-bottom: 40px;
+        "
+      >
+        SGPA : <span style="margin-right: 250px">{{grades.0.0}}</span> OGPA :
+        <span>{{grades.0.1}}</span>
+      </div>
+    </div>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,279 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Result Processing System</title>
+    <link rel="stylesheet" href="{% static 'control/style.css' %}"/>
+    <link rel="icon" href="{% static 'control/rps.png' %}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <h2>
+          <span><img src="{% static 'control/rps.png' %}" width="300" height="200" /></span>
+        </h2>
+      </div>
+      <div class="sidebar-menu">
+        <ul>
+          <li>
+            <a href="{% url 'index' %}"
+              ><span class="las la-igloo"></span>
+              <span>Add Student Details</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'searchstudent' %}"
+              ><span class="las la-users"></span> <span>Search Student</span></a
+            >
+          </li>
+          <li>
+            <a href="{% url 'result' %}"
+              ><span class="las la-place-of-worship"></span>
+              <span>Search Result</span></a
+            >
+          </li>
+          <li>
+            <a href="#" class="active"
+              ><span class="las la-receipt"></span>
+              <span>Update Student Marks</span></a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <form style="margin-left: 250px;text-align: center;margin-bottom: 20px;"  method="POST" action="{% url 'fetchcourses' %}">
+        {% csrf_token %}
+        <label for="prog_id" >Program ID</label>
+        <select name="prog_id" style="padding: 5px;margin-left: 5px;margin-right: 5px;">
+          {% for program in scheme %}
+          {% for data in program%}
+            <option name="{{data}}" value="{{data}}">{{data}}</option>
+          {% endfor %}
+        {% endfor %}
+        </select>
+
+
+
+
+        <label for="enroll_number" style="font-weight: 600;padding: 5px;">Enroll. Num.</label>
+        <input type="text" name="enroll_number" value= "{{enrolldef}}" style="padding: 5px;">
+
+        <label for="sem" style="padding: 5px;">Semester</label>
+        <input type="number" name="sem" min="1" max="8" value="{{semdef}}" style="padding: 5px;margin-left: 5px;margin-right: 5px;">
+        <br>
+        <input type="submit" value="Fetch Courses" style="margin-top: 20px;padding: 5px;">
+      </form>
+    
+    {% if values %}
+      <form action="{% url 'store' %}" method="POST">
+        {% csrf_token %}
+        <table border="2"
+        width="800px"
+        style="margin-left: 100px; margin-top: 10px; border-collapse: collapse;"
+      >
+        <tr>
+          <th>Course No.</th>
+          <th>Course Title</th>
+          <th>Theory</th>
+          <th>Practical</th>
+          <th>Midterm</th>
+        </tr>
+        {% for data in courses %}
+        <tr style="padding: 30px;">
+          <td>{{data.0}}</td>
+          <td>{{data.1}}</td>
+          {% if not data.2 %}
+            <td style="padding: 20px;pointer-events: none;"><input type="number" name="{{data.0}}" max="0" min="0" value="0" readonly></td>
+          {% else %}
+            <td style="padding: 20px;"><input type="number" name="{{data.0}}" max='{{data.2}}' min='0'></td>
+          {% endif %}
+
+          {% if not data.3 %}
+            <td style="padding: 20px;pointer-events: none;"><input type="number" name="{{data.1}}" max="0" min="0" value="0" value="0" readonly></td>
+          {% else %}
+            <td style="padding: 20px;"><input type="number" name="{{data.1}}" max='{{data.3}}' min='0'></td>
+          {% endif %}
+
+          {% if not data.4 %}
+            <td style="padding: 20px;pointer-events: none;"><input type="number" name="{{forloop.counter}}" max="0" min="0" value="0" readonly></td>
+          {% else %}
+            <td style="padding: 20px;"><input type="number" name="{{forloop.counter}}" max='{{data.4}}' min='0'></td>
+          {% endif %}
+        </tr>
+         {% endfor %}
+
+      </table>
+      <div style="text-align: center; margin-top: 30px;margin-left: 40px;">
+        <!-- <label for="enroll_num" style="margin-left: 130px;">Student Enrollment Number</label>
+        <input type="text" name="enroll_num"> -->
+        <label for="roll_num" style="margin-left: 40px;">Student Roll Number</label>
+        <input type="number" name="roll_num">
+      </div>
+
+      <div style="margin-left: 500px; margin-top: 25px; margin-bottom: 40px;">
+          <input
+            type="submit"
+            value="UPDATE MARKS"
+            style="width: 100px; height: 30px; font-weight: 700"
+        />
+      </div>
+      <input type="hidden" name="prog_id_hid" value="{{progdef}}">
+      <input type="hidden" name="dept_id_hid" value="{{deptdef}}">
+      <input type="hidden" name="sem_hid" value="{{semdef}}">
+      <input type="hidden" name="enroll_num" value="{{enrolldef}}">
+    </form>
+    {% else %}
+     <h2 style="color: red;text-align: center;margin-left: 250px;margin-top: 100px;">{{message}}</h2>
+   {% endif %}
+
+   
+ 
+    </div>
+
+ 
+
+
+  </body>
+</html>
+
+
+
+    <!-- <div style="margin-left: 375px; margin-top: 50px">
+      <div style="margin-left: 100px; font-weight: 700">
+        DISCRETE MATHEMATICAL (BS-222) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        COMPUTER ORGANIZATION (CS-221) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        DATA STRUCTURE (CS-222) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        MICROPROSSORS (CS-224) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        SYSTEM SOFTWARE (CS-225) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        COMMUNICATION SYSTEM (EC-228) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; margin-left: 100px; font-weight: 700">
+        NATIONAL SERVICE SCHEME (NSS) :
+        <div style="margin-left: 25px; margin-top: 20px">
+          <label for="th" style="font-weight: 600; margin-left: 80px"
+            >Theory :
+          </label>
+          <input type="text" id="th" />
+          <label for="pr" style="font-weight: 600; margin-left: 80px"
+            >Practical :
+          </label>
+          <input type="text" id="pr" />
+          <label for="mt" style="font-weight: 600; margin-left: 80px"
+            >Midterm :
+          </label>
+          <input type="text" id="mt" />
+        </div>
+      </div>
+
+      <div style="margin-left: 500px; margin-top: 25px">
+        <a href="Result.html"
+          ><input
+            type="submit"
+            value="UPDATE"
+            style="width: 100px; height: 30px; font-weight: 700"
+        /></a>
+      </div>
+    </div>-->

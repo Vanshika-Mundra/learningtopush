@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Result Processing System</title>
+    <link rel="stylesheet" href="{% static 'control/style.css' %}"/>
+    <link rel="icon" href="{% static 'control/rps.png' %}" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <div>
+        <h2>
+          <span><img src="{% static 'control/rps.png' %}" width="300" height="200" /></span>
+        </h2>
+      </div>
+      <div class="sidebar-menu">
+        <ul><li>
+          <a href="{% url 'index' %}"
+            ><span class="las la-igloo"></span>
+            <span>Add Student Details</span></a
+          >
+        </li>
+        <li>
+          <a href="#" class="active"
+            ><span class="las la-users"></span> <span>Search Student</span></a
+          >
+        </li>
+        <li>
+          <a href="{% url 'result' %}"
+            ><span class="las la-place-of-worship"></span>
+            <span>Search Result</span></a
+          >
+        </li>
+        <li>
+          <a href="{% url 'updateresult' %}"
+            ><span class="las la-receipt"></span>
+            <span>Update Student Marks</span></a
+          >
+        </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <form method="POST" style="margin-left: 80px;" action="{% url 'searchstudentdata' %}">
+        {% csrf_token %}
+        <label for="enroll_num">Enrollment Number</label>
+        <input name="enroll_num" type="text">
+        <input type="submit" value="Search Student">
+
+      </form >
+       
+      <form method="POST" action="{% url 'searchall' %}">
+        {% csrf_token %}
+        <input type="submit" name="show_all" value="Search All ->" style="margin-left: 900px;background-color: skyblue;color: white;padding: 5px;border: thin;border-radius: 8px;">
+      </form>
+      <h2 style="text-align: center;color: red;margin-top: 20px;">{{message}}</h2>
+
+    {% if student %}
+      <table border="1"
+      width='800px'
+      style="margin-left: 100px; margin-top: 10px; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="padding: 10px;">Prog. ID</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Department</th>
+            <th>Mother's Name</th>
+            <th>Father's Name</th>
+            <th>Admission Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+             <td style="padding: 10px;">{{student.0.6}}</td>
+            <td>{{student.0.1}}</td>
+            <td>{{year}}</td>
+            <td>{{student.0.5}}</td>
+            <td>{{student.0.3}}</td>
+            <td>{{student.0.4}}</td>
+            <td>{{student.0.7}}</td>
+
+          </tr>
+        </tbody>
+      </table>
+    {% endif %}
+
+    {% if studentall %}
+
+      <table border="1"
+      width='800px'
+      style="margin-left: 100px; margin-top: 10px; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="padding: 10px;">Enrollment Number</th>
+            <th>Name</th>
+            <th>Semester</th>
+            <th>Mother's Name</th>
+            <th>Father's Name</th>
+            <th>Department</th>
+            <th>Prog. ID</th>
+            <th>Admission Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in studentall %}
+          <tr>
+            {% for students in data %}
+             <td style="padding: 10px;">{{students}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+      
+
+    </div>
+  </body>
+</html>
